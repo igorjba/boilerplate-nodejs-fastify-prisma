@@ -9,6 +9,7 @@ datasource db {
 
 enum Role {
   ADMIN
+  MODERATOR
   MEMBER
 }
 
@@ -43,6 +44,7 @@ model Comment {
   id        String   @id @default(uuid())
   content   String
   userId    String
+  user      User     @relation(fields: [userId], references: [id])
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
   likes     Like[]
@@ -51,14 +53,17 @@ model Comment {
   @@map("comments")
 }
 
+
 model Like {
   id        String   @id @default(uuid())
   userId    String
+  user      User     @relation(fields: [userId], references: [id])
   postId    String?
-  commentId String?
   post      Post?    @relation(fields: [postId], references: [id])
+  commentId String?
   comment   Comment? @relation(fields: [commentId], references: [id])
   createdAt DateTime @default(now())
 
   @@map("likes")
 }
+
